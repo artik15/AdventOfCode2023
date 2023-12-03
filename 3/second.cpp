@@ -71,10 +71,10 @@ int FindPartNumbers(std::string new_str)
     size_t found = 0;
     size_t vec_size = 0;
     str[0] = new_str;
-    gears_t gear = {0, 0, 1, 0, false};
+    gears_t gear = {0,0,1, {0,0},0,false};
     static std::vector<gears_t> gears;
 
-    if (str[1].empty()) // gotta load up the buffer
+    if (str[1].empty()) 
     {
         len = new_str.length(); // Lines are same lenght
     }
@@ -92,17 +92,20 @@ int FindPartNumbers(std::string new_str)
             gear.beg = found - 1;
             gear.end = found + 1;
             gears.insert(gears.begin(), gear);
-            gear = {0,0,1,0,false};
+            gear = {0,0,1, {0,0},0,false};
             found++;
         }
         
     }
 
     vec_size = gears.size();
+    
+    printf("VECSIZE %zu\n", vec_size);
 
     while(vec_size > 0)
     {
-        gear = gears[vec_size-1];
+        gear = gears[gears.size()-1];
+        printf("BEG: %zu\n", gear.beg);
         gears.pop_back();
 
         if(gear.last_line)
@@ -123,6 +126,9 @@ int FindPartNumbers(std::string new_str)
         }
         vec_size--;
     }
+
+    vec_size = gears.size();
+    printf("VECSIZE AFTER %zu\n", vec_size);
 
     str[1] = str[0];
     return ret;
@@ -152,7 +158,7 @@ int main(int argc, char** argv)
     while (std::getline(file, str))
     {
         ret += FindPartNumbers(str);
-        // if(line > 100) break; 
+        // if(line > 6) break; 
         
         printf("SUM: %d\n", ret);
         line++;
